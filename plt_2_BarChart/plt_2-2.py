@@ -1,17 +1,19 @@
 import csv
 import numpy as np
+import pandas as pd
 from matplotlib import pyplot as plt
 from collections import Counter
 
 plt.style.use('fivethirtyeight')
 
-with open('data.csv') as csv_file:
-    csv_reader = csv.DictReader(csv_file)
 
-    language_counter = Counter()
+data = pd.read_csv('data.csv')
+ids = data['Responder_id']
+lang_responses = data['LanguagesWorkedWith']
 
-    for row in csv_reader:
-        language_counter.update(row['LanguagesWorkedWith'].split(';'))
+language_counter = Counter()
+for response in lang_responses:
+    language_counter.update(response.split(';'))
 
 languages = []
 popularity = []
@@ -21,10 +23,10 @@ for item in language_counter.most_common(15):
     popularity.append(item[1])
 
 
-print(languages)
-print(popularity)
+languages.reverse()  # The list reverse method
+popularity.reverse()
 
-plt.barh(languages, popularity)
+plt.barh(languages, popularity)  # Horizontal Bar Chart
 plt.title('Most Poular languages')
 #plt.ylabel("Programming Languages")
 plt.xlabel('Number of People Who USe')
